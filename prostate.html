@@ -17,7 +17,16 @@
                 var psa = parseFloat($("#psa").val());
                 score += 50 * psa;
                 var result1 = (.00000006838 * Math.pow(score, 3) - .0000387361 * Math.pow(score, 2) + .002787235 * score + .84845) * 100;
-                $("#5year").text((score > 30 ? result1.toFixed(2) : ">90")+"%");
+                var result2 = (.00000007 * Math.pow(score, 3) - .0000351567 * Math.pow(score, 2) + .00147148 * score + .82816) * 100;
+                var result3 = 34305.86735 * Math.pow(.95012, score);
+                $("#5year").text((score > 30 ? result1.toFixed(3) : ">90")+"%");
+                if (score < 97.5) {
+                    $("#10year").text(">70%");
+                } else if (score >= 265) {
+                    $("#10year").text(result3.toFixed(3)+"%");
+                } else {
+                    $("#10year").text(result2.toFixed(3)+"%");
+                }
                 $("#result").show();
             });
 
