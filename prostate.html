@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                var score = 0;
+                score += parseFloat($("input[name='hormone']:checked").val());
+                score += parseFloat($("input[name='gleason']:checked").val());
+                score += parseFloat($("input[name='marg']:checked").val());
+                score += parseFloat($("input[name='cgy']:checked").val());
+                score += $("#ext").prop("checked") ? 22.5 : 0;
+                score += $("#inv").prop("checked") ? 25 : 0;
+                var psa = parseFloat($("#psa").val());
+                score += 50 * psa;
+                var result1 = (.00000006838 * Math.pow(score, 3) - .0000387361 * Math.pow(score, 2) + .002787235 * score + .84845) * 100;
+                $("#5year").text((score > 30 ? result1.toFixed(2) : ">90")+"%");
+                $("#result").show();
+            });
+
+            $("#back").click(function(){
+                $(location).attr("href","./index.html");
+            });
+        });
+    
+    </script>
+
+    <style>
+    #header {
+        position: absolute;
+        top:1vh;
+        width: 10vw;
+        height:60px;
+        text-align: left;
+    }
+    #back {
+        height: 100%;
+        width: 100%;
+    }
+    #footer {
+        position:relative;
+        bottom:0;
+        width:98%;
+        height:60px; 
+        text-align: right;
+    }
+    body {
+        text-align: center;
+    }
+    </style>
+</head>
+
+
+
+<body>
+<div id="header"><button id="back">Back</button></div>
+<h1>Prostate Cancer Nomogram Tool</h1>
+<form action="" method="POST">
+Hormones: <br>
+<input type="radio" name="hormone" checked value="0">NC ADT</input><br>
+<input type="radio" name="hormone" value="49">RT Alone</input><br>
+<br>
+Surgical Gleason Score: <br>
+<input type="radio" name="gleason" checked value="0">&le; 6</input><br>
+<input type="radio" name="gleason" value="54">7</input><br>
+<input type="radio" name="gleason" value="70">8</input><br>
+<input type="radio" name="gleason" value="90">9-10</input><br>
+<br>
+Extraprostatic extension: <input type="checkbox" id="ext"/><br>
+<br>
+Surgical Margins: <br>
+<input type="radio" name="marg" checked value="0">Positive</input><br>
+<input type="radio" name="marg" value="27.5">Negative</input><br>
+<br>
+Seminal vesicle invasion: <input type="checkbox" id="inv"/><br>
+<br>
+Pre-RT PSA (ng/mL): <input type="number" step=".1" min="0" max="2" id="psa" required/><br>
+<br>
+Prostate bed RT dose (cGy):<br>
+<input type="radio" name="cgy" checked value="0">&ge; 6,600</input><br>
+<input type="radio" name="cgy" value="17.5">&lt; 6600</input><br>
+<br><br>
+<input type="submit" name="submit" id="submit" value="Calculate"/>
+
+</form>
+
+<br><br>
+<div id="result" hidden>
+    <h2>5 Year Freedom from Biochemical Failure:</h2><h1 style="color:red"><span id="5year"></span></h1>
+    <h2>10 Year Freedom from Biochemical Failure:</h2><h1 style="color:red"><span id="10year"></span></h1>
+</div>
+<div id="footer">
+    Creutzberg et al.<br>
+    Int J Radiation Oncol Biol Phys, Vol. 91, No. 3, pp. 530e539, 2015
+</div>
+
+</body>
+</html>
